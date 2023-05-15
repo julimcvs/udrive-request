@@ -1,0 +1,12 @@
+[api]
+port = "3200"
+
+[database]
+host = "udrive-service.cy0mf1jtohal.us-east-2.rds.amazonaws.com"
+user = "udrive"
+pass = "udrive123"
+name = "udrive"
+
+[udrive-price]
+host = "localhost"
+port = "3300"
