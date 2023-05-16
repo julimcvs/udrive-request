@@ -4,22 +4,44 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"udrive-request/configs"
 )
 
-func OpenConnection() (*sql.DB, error) {
-	conf := configs.GetDB()
+import (
+	"os"
+)
 
-	sc := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		conf.Host, conf.Port, conf.User, conf.Pass, conf.Database)
+var (
+	host     = os.Getenv("host")
+	password = os.Getenv("password")
+	port     = 5432
+	user     = "user"
+	database = "udrive"
+)
 
-	conn, err := sql.Open("postgres", sc)
-
+func GetConnection() (*sql.DB, error) {
+	psqlInfo := fmt.Sprintf(
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, database)
+	_, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
+		fmt.Printf("error connecting to database %v\n", err)
 		panic(err)
 	}
 
-	err = conn.Ping()
+	dbConnection, err := GetConnection()
+	if err != nil {
+		fmt.Printf("error connecting to database %v\n", err)
+		panic(err)
+	}
 
-	return conn, err
+	err = dbConnection.Ping()
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		fmt.Printf("error pinging database %v\n", err)
+		panic(err)
+	}
+
+	return dbConnection, nil
 }
