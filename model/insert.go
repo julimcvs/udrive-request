@@ -29,10 +29,9 @@ func Insert(request Request) (id int64, err error) {
 
 	responseBody := bytes.NewBuffer(postBody)
 
-	config := configs.GetGateway()
-	url := fmt.Sprintf("%s/calculate", config.Url)
+	config := configs.GetPRICE()
+	url := fmt.Sprintf("http://%s:%s/calculate", config.Host, config.Port)
 	res, err := http.Post(url, "application/json", responseBody)
-	fmt.Println("Price calculated")
 
 	if err != nil {
 		log.Printf("Error calculating request price: %v", err)
@@ -46,8 +45,7 @@ func Insert(request Request) (id int64, err error) {
 
 	sql := "INSERT INTO tb_request (user_id, driver_id, origin, destination, scheduled_time, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
 
-	err = conn.QueryRow(sql, request.UserId, request.DriverId, request.Origin, request.Destination, request.ScheduledTime, 10, PENDING).Scan(&id)
-	fmt.Println("Inserted on database")
+	err = conn.QueryRow(sql, request.UserId, request.DriverId, request.Origin, request.Destination, request.ScheduledTime, response.Message, PENDING).Scan(&id)
 
 	return
 }

@@ -5,9 +5,9 @@ import "github.com/spf13/viper"
 var cfg *Config
 
 type Config struct {
-	API     APIConfig
-	DB      DBConfig
-	GATEWAY GatewayConfig
+	API   APIConfig
+	DB    DBConfig
+	PRICE UDrivePriceConfig
 }
 
 type APIConfig struct {
@@ -22,13 +22,14 @@ type DBConfig struct {
 	Database string
 }
 
-type GatewayConfig struct {
-	Url string
+type UDrivePriceConfig struct {
+	Host string
+	Port string
 }
 
 func init() {
 	viper.SetDefault("api.port", "3200")
-	viper.SetDefault("database.host", "udrive.cifxryecdgxe.sa-east-1.rds.amazonaws.com")
+	viper.SetDefault("database.host", "udrive-service.cy0mf1jtohal.us-east-2.rds.amazonaws.com")
 	viper.SetDefault("database.port", "5432")
 }
 
@@ -56,8 +57,9 @@ func Load() error {
 		Database: viper.GetString("database.name"),
 	}
 
-	cfg.GATEWAY = GatewayConfig{
-		Url: viper.GetString("gateway.url"),
+	cfg.PRICE = UDrivePriceConfig{
+		Host: viper.GetString("udrive-price.host"),
+		Port: viper.GetString("udrive-price.port"),
 	}
 
 	return nil
@@ -71,6 +73,6 @@ func GetAPI() string {
 	return cfg.API.Port
 }
 
-func GetGateway() GatewayConfig {
-	return cfg.GATEWAY
+func GetPRICE() UDrivePriceConfig {
+	return cfg.PRICE
 }
