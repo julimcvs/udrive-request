@@ -11,6 +11,7 @@ type Request struct {
 	DriverId      int64            `json:"driverId"`
 	Origin        string           `json:"origin"`
 	Destination   string           `json:"destination"`
+	Distance      int64            `json:"distance"`
 	ScheduledTime time.Time        `json:"time"`
 	Price         *decimal.Decimal `json:"price"`
 	Status        *Status          `json:"status"`
@@ -19,6 +20,7 @@ type Request struct {
 type Status string
 
 type ResponseBody struct {
+	Status  *int    `json:"status"`
 	Message *string `json:"message"`
 }
 

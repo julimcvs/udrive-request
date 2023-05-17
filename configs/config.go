@@ -29,7 +29,7 @@ type UDrivePriceConfig struct {
 
 func init() {
 	viper.SetDefault("api.port", "3200")
-	viper.SetDefault("database.host", "udrive-service.cy0mf1jtohal.us-east-2.rds.amazonaws.com")
+	viper.SetDefault("database.host", "localhost")
 	viper.SetDefault("database.port", "5432")
 }
 
@@ -73,6 +73,6 @@ func GetAPI() string {
 	return cfg.API.Port
 }
 
-func GetPRICE() UDrivePriceConfig {
+func GetPriceConfig() UDrivePriceConfig {
 	return cfg.PRICE
 }

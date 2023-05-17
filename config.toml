@@ -2,7 +2,8 @@
 port = "3200"
 
 [database]
-host = "udrive-service.cy0mf1jtohal.us-east-2.rds.amazonaws.com"
+host = "localhost"
+port = "5432"
 user = "udrive"
 pass = "udrive123"
 name = "udrive"

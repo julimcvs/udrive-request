@@ -23,15 +23,14 @@ func Insert(request Request) (id int64, err error) {
 	defer conn.Close()
 
 	postBody, _ := json.Marshal(map[string]int64{
-		// TODO Calcular distância
-		"distance": 10,
+		"distance": request.Distance,
 	})
 
-	responseBody := bytes.NewBuffer(postBody)
+	requestBody := bytes.NewBuffer(postBody)
 
-	config := configs.GetPRICE()
+	config := configs.GetPriceConfig()
 	url := fmt.Sprintf("http://%s:%s/calculate", config.Host, config.Port)
-	res, err := http.Post(url, "application/json", responseBody)
+	res, err := http.Post(url, "application/json", requestBody)
 
 	if err != nil {
 		log.Printf("Error calculating request price: %v", err)

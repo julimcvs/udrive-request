@@ -3,18 +3,17 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/aws/aws-lambda-go/events"
+	"net/http"
 	"udrive-request/model"
 )
 
-func Create(r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Println("Request:", r.Body)
+func Create(w http.ResponseWriter, r *http.Request) {
 	var request model.Request
 
-	err := json.Unmarshal([]byte(r.Body), &request)
+	err := json.NewDecoder(r.Body).Decode(&request)
 
 	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: 400}, fmt.Errorf("method arguments not valid, %v", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
 	id, err := model.Insert(request)
@@ -23,7 +22,7 @@ func Create(r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 	var status int
 
 	if err != nil {
-		msg = fmt.Sprintf("Error creating ride with parameters: %v", err)
+		msg = fmt.Sprintf("Error creating ride: %v", err)
 		status = 400
 	} else {
 		msg = fmt.Sprintf("Ride successfully created! ID: %v", id)
@@ -31,19 +30,14 @@ func Create(r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 	}
 
 	responseBody := model.ResponseBody{
+		Status:  &status,
 		Message: &msg,
 	}
 
-	jbytes, err := json.Marshal(responseBody)
+	w.Header().Add("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(&responseBody)
 
 	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: 400}, err
+		return
 	}
-
-	response := events.APIGatewayProxyResponse{
-		StatusCode: status,
-		Body:       string(jbytes),
-	}
-
-	return response, nil
 }
