@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
+	"udrive-request/configs"
 	"udrive-request/db"
 )
 
@@ -17,16 +16,21 @@ type Response struct {
 }
 
 func Insert(request Request) (id int64, err error) {
-	conn, err := db.GetConnection()
+	conn, err := db.OpenConnection()
 	if err != nil {
 		return
 	}
 	defer conn.Close()
 
-	responseBody := bytes.NewBuffer([]byte(strconv.Itoa(request.Distance)))
+	postBody, _ := json.Marshal(map[string]int64{
+		// TODO Calcular distância
+		"distance": 10,
+	})
 
-	gateway := os.Getenv("gateway")
-	url := fmt.Sprintf("%s/calculate", gateway)
+	responseBody := bytes.NewBuffer(postBody)
+
+	config := configs.GetGateway()
+	url := fmt.Sprintf("%s/calculate", config.Url)
 	res, err := http.Post(url, "application/json", responseBody)
 	fmt.Println("Price calculated")
 

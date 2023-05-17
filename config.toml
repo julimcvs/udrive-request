@@ -1,0 +1,11 @@
+[api]
+port = "3200"
+
+[database]
+host = "udrive.cifxryecdgxe.sa-east-1.rds.amazonaws.com"
+user = "udrive"
+pass = "udrive123"
+name = "udrive"
+
+[gateway]
+url = "https://hxahqhjkx5.execute-api.sa-east-1.amazonaws.com"

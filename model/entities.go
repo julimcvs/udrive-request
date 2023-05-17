@@ -13,7 +13,6 @@ type Request struct {
 	Destination   string           `json:"destination"`
 	ScheduledTime time.Time        `json:"time"`
 	Price         *decimal.Decimal `json:"price"`
-	Distance      int              `json:"distance"`
 	Status        *Status          `json:"status"`
 }
 
