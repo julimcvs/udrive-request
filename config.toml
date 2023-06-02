@@ -5,9 +5,5 @@ port = "3200"
 host = "localhost"
 port = "5432"
 user = "udrive"
-pass = "udrive123"
+pass = "udrive"
 name = "udrive"
-
-[udrive-price]
-host = "localhost"
-port = "3300"

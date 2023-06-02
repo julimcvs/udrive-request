@@ -1,12 +1,6 @@
 package model
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-	"udrive-request/configs"
 	"udrive-request/db"
 )
 
@@ -22,29 +16,9 @@ func Insert(request Request) (id int64, err error) {
 	}
 	defer conn.Close()
 
-	postBody, _ := json.Marshal(map[string]int64{
-		"distance": request.Distance,
-	})
+	sql := "INSERT INTO tb_request (user_id, origin, destination, scheduled_time, price, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
 
-	requestBody := bytes.NewBuffer(postBody)
-
-	config := configs.GetPriceConfig()
-	url := fmt.Sprintf("http://%s:%s/calculate", config.Host, config.Port)
-	res, err := http.Post(url, "application/json", requestBody)
-
-	if err != nil {
-		log.Printf("Error calculating request price: %v", err)
-	}
-	defer res.Body.Close()
-	var response Response
-	err = json.NewDecoder(res.Body).Decode(&response)
-	if response.Status != 200 || err != nil {
-		log.Print("Error calculating request price")
-	}
-
-	sql := "INSERT INTO tb_request (user_id, driver_id, origin, destination, scheduled_time, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
-
-	err = conn.QueryRow(sql, request.UserId, request.DriverId, request.Origin, request.Destination, request.ScheduledTime, response.Message, PENDING).Scan(&id)
+	err = conn.QueryRow(sql, request.UserId, request.Origin, request.Destination, request.ScheduledTime, request.Price, PENDING).Scan(&id)
 
 	return
 }

@@ -6,15 +6,14 @@ import (
 )
 
 type Request struct {
-	ID            *int64           `json:"id"`
-	UserId        int64            `json:"userId"`
-	DriverId      int64            `json:"driverId"`
-	Origin        string           `json:"origin"`
-	Destination   string           `json:"destination"`
-	Distance      int64            `json:"distance"`
-	ScheduledTime time.Time        `json:"time"`
-	Price         *decimal.Decimal `json:"price"`
-	Status        *Status          `json:"status"`
+	ID            *int64          `json:"id"`
+	UserId        int64           `json:"userId"`
+	Origin        string          `json:"origin"`
+	Destination   string          `json:"destination"`
+	Distance      int64           `json:"distance"`
+	ScheduledTime time.Time       `json:"time"`
+	Price         decimal.Decimal `json:"price"`
+	Status        *Status
 }
 
 type Status string
